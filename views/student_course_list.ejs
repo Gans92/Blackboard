@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <h4 class="text-center">Courses Available</h4>
+      <table class='table table-striped'>
+        <thead>
+        <tr>
+          <th>Course Name</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for (course of courses) { %>
+        <tr>
+          <td>
+            <label class="text-center"><%= course.course %></label>
+          </td>
+          <td>
+              <a class="form-control btn btn-primary btn-sm" href="/course/<%= course.id %>/edit">View Details</a>
+          </td>
+        </tr>
+        <%} %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,151 @@
+<%
+var courseOrder = 0;
+var docsOrder = 0;
+if (typeof lectures === 'object'){
+  courseOrder = lectures.length;
+}
+if (typeof documents === 'object'){
+  docsOrder = documents.length;
+}
+%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script>
+  function checkData() {
+    var data = document.getElementById("data").value;
+    var courseorder = document.getElementById("courseOrder").value;
+    var docsorder = document.getElementById("docsOrder").value;
+    if(data == "2" && courseorder == 0){
+      //alert("Documents");
+      document.getElementById('subCourses').style.display = "none";
+      document.getElementById('documents').style.display = "block";
+    }
+    else if(data == "1" && docsorder == 0){
+      //alert("Sub-Course");
+      document.getElementById('subCourses').style.display = "block";
+      document.getElementById('documents').style.display = "none";
+    }else{
+      document.getElementById('documents').style.display = "none";
+      document.getElementById('subCourses').style.display = "none";
+    }
+  }
+</script>
+
+<div class="container text-center">
+    <!-- Edit Course -->
+    <div class="row col-md-12">
+        <div class="well col-md-6 ">
+            <% include _course_form %>
+        </div>
+
+        <div style="left: 25px;" class="well col-md-6 ">
+          <input type="hidden" id="courseOrder" value="<%=courseOrder%>">
+          <input type="hidden" id="docsOrder" value="<%=docsOrder%>">
+          <h4 class="text-center">Add New Sub-Courses/Documents</h4>
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="firstname">Actions*</label>
+            <div class="col-sm-10">
+              <select class="form-control" id="data" onchange="checkData()" name="action">
+                <option value="0">Select Action</option>
+                <option value="1">Add New Sub-Course</option>
+                <option value="2">Add New Documents</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" style="float:right">
+            <br><label class="control-label" ><font color="red">* Required Field</font></label>
+            <!--<div class="col-sm-10"></div>-->
+          </div>
+        </div>
+    </div>
+
+    <!-- Add new sub-courses -->
+    <div class="row" id="subCourses" style="display:none;">
+        <div class="well col-md-8 col-md-offset-2">
+            <% include _lecture_form %>
+        </div>
+    </div>
+
+    <!-- Add new documents -->
+    <div class="row" id="documents" style="display:none;">
+      <div class="well col-md-8 col-md-offset-2">
+        <% include _video_form %>
+        <div class="form-group" style="float:right">
+          <label class="control-label" ><font color="red">* Required Field</font></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lecture list -->
+    <div class="row col-md-12">
+        <div class="well col-md-6 ">
+          <h4 class="text-center">Sub-Courses Details</h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SubCourse Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+              <tbody>
+              <% for (course of lectures) { %>
+              <tr>
+                <td>
+                  <label class="text-center"><%= course.course %></label>
+                </td>
+                <td>
+                  <form method="post" action="/course/delete" class="form-inline delete-item">
+                    <a class="form-control btn btn-primary btn-sm" href="/course/<%= course.id %>/edit">Edit</a>
+                    <input type="hidden" name="id" value="<%= course.id %>">
+                    <input type="submit" class="form-control btn btn-danger btn-sm" value="Delete">
+                  </form>
+                </td>
+              </tr>
+              <%} %>
+              </tbody>
+            </table>
+        </div>
+        <div style="left: 25px;" class="well col-md-6">
+          <h4 class="text-center">Documents Details</h4>
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th>Document Name</th>
+              <th>File Details</th>
+              <th>Links</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+                    <% for (doc of documents) { %>
+                        <tr>
+                            <td>
+                              <%if(doc.url.split('.').pop() == "pdf" && (doc.url.split('.').pop() != "mov" || doc.url.split('.').pop() != "mp4" || doc.url.split('.').pop() != "mpeg")){%><i class="fa fa-file-pdf-o" style="font-size:24px"></i><%}%>
+                              <%if((doc.url.split('.').pop() == "mpeg" || doc.url.split('.').pop() == "mp3")  && (doc.url.split('.').pop() != "mov" || doc.url.split('.').pop() != "mp4" || doc.url.split('.').pop() != "pdf")){%><i class="fa fa-file-audio-o" style="font-size:24px"></i><%}%>
+                              <%if((doc.url.split('.').pop() == "mov" || doc.url.split('.').pop() == "mp4") && (doc.url.split('.').pop() != "pdf" || doc.url.split('.').pop() != "mpeg")){%><i class="fa fa-file-movie-o" style="font-size:24px"></i><%}%>
+                              <%if(doc.url.split('.').pop() != "pdf" && doc.url.split('.').pop() != "mov" && doc.url.split('.').pop() != "mp4" && doc.url.split('.').pop() != "mpeg" && doc.url.split('.').pop() != "mp3"){%><i class="fa fa-file-image-o" style="font-size:24px"></i><%}%>
+                              <%= doc.name %>
+                            </td>
+                            <td>
+                                <% if (doc.url) { %>
+                                    <a class="" id="url" href="<%= doc.url %>" target="_blank">File Preview</a>
+                                <% } %>
+                            </td>
+                            <td>
+                              <% if (doc.link) { %>
+                              <a class="" id="link" href="<%= doc.link %>" target="_blank">Link Preview</a>
+                              <% } %>
+                            </td>
+                            <td>
+                                <form method="post" action="/document/delete" class="form-inline delete-item">
+                                    <a href="/document/<%= doc.id %>/edit" class="form-control btn btn-primary btn-sm">Edit</a>
+                                    <input type="hidden" name="id" value="<%= doc.id %>">
+                                    <input type="submit" class="form-control btn btn-danger btn-sm" value="Delete">
+                                </form>
+                            </td>
+                        </tr>
+                    <% } %>
+            </tbody>
+          </table>
+        </div>
+    </div>
+</div>

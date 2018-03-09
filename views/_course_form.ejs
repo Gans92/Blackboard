@@ -1,0 +1,47 @@
+<%
+    var name = '';
+    var des = '';
+    var cbutton = 'Create';
+    var cid = 0;
+    var parentId = 0;
+    var cheading = 'Add New Course'
+    if (typeof c === 'object') {
+        name = c.course;
+        des = c.description;
+        cid = c.id;
+        parentId = c.course_parentId;
+        cbutton = 'Update'
+        cheading = 'Edit course'
+    }
+%>
+<form method="post" action="/course" class="form-horizontal">
+
+    <h4 class="text-center"><%= cheading %></h4>
+
+    <!-- hidden id -->
+    <input type="hidden" name="id" value="<%= cid %>">
+    <input type="hidden" name="parentId" value="<%= parentId %>">
+
+    <!-- name -->
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="course name">Course Name*</label>
+        <div class="col-sm-10">
+            <input class="form-control" type="text" id="coursename" name="name" value="<%= name %>">
+        </div>
+    </div>
+
+  <!--Description-->
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="course description">Course Description*</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" id="coursedes" name="des" value="<%= des %>">
+      </div>
+    </div>
+
+    <!-- button -->
+    <div class="form-group">
+        <div class="col-sm-2 col-sm-offset-2">
+            <input class="form-control btn btn-primary" type="submit" value="<%= cbutton %>">
+        </div>
+    </div>
+</form>

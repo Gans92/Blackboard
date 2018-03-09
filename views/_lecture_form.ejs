@@ -1,0 +1,29 @@
+<%
+    var description = '';
+    var lbutton = 'Create';
+    var lid = 0;
+    var lheading = 'Add New Sub-Course';
+    var lname = '';
+%>
+<form method="post" action="/course" class="form-horizontal">
+
+  <h4 class="text-center"><%= lheading %></h4>
+  <!-- hidden id and courseId -->
+  <input type="hidden" name="parentId" value="<%= c.id %>">
+  <input type="hidden" name="id" value="<%= lid %>">
+
+  <!-- name -->
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="course name">Sub-Course Name*</label>
+    <div class="col-sm-10">
+      <input class="form-control" type="text" id="coursename" name="name" value="<%= lname %>">
+    </div>
+  </div>
+
+  <!-- button -->
+  <div class="form-group">
+    <div class="col-sm-2 col-sm-offset-2">
+      <input class="form-control btn btn-primary" type="submit" value="<%= lbutton %>">
+    </div>
+  </div>
+</form>
